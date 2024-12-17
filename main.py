@@ -19,7 +19,7 @@ class Item(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
-    description = Column(String, index=True)
+    precio = Column(String, index=True)
 
 # Crear las tablas en la base de datos
 Base.metadata.create_all(bind=engine)
@@ -34,8 +34,8 @@ def get_db():
 
 # Ruta para crear un nuevo ítem
 @app.post("/items/")
-def create_item(id:int,name: str, description: str, db: Session = Depends(get_db)):
-    db_item = Item(id=id , name=name, description=description)
+def create_item(id:int,name: str, precio: str, db: Session = Depends(get_db)):
+    db_item = Item(id=id , name=name, precio=precio)
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
@@ -45,7 +45,7 @@ def create_item(id:int,name: str, description: str, db: Session = Depends(get_db
 @app.get("/items/")
 def read_items(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     items = db.query(Item).offset(skip).limit(limit).all()
-    ordered_items = [{key: getattr(item, key) for key in ["id", "name", "description"]} for item in items]
+    ordered_items = [{key: getattr(item, key) for key in ["id", "name", "precio"]} for item in items]
     return ordered_items
 
 
